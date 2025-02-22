@@ -12,60 +12,78 @@ Linker script and memory map
 
 
 .header         0x0000000000000000       0x10
-                0x0000000000000000        0x8 QUAD 0x112090 __bss_start
+                0x0000000000000000        0x8 QUAD 0x1121a0 __bss_start
                 0x0000000000000008        0x8 QUAD 0x30 (__bss_end - __bss_start)
 
-.body           0x0000000000110000     0x2248 load address 0x0000000000000010
+.body           0x0000000000110000     0x2408 load address 0x0000000000000010
  *(.text)
- .text          0x0000000000110000       0x5a main.o
+ .text          0x0000000000110000       0x8a main.o
                 0x0000000000110000                start_kernel
- .text          0x000000000011005a      0x182 fbcon.o
-                0x000000000011005a                putc
-                0x00000000001101a6                puts
- .text          0x00000000001101dc      0x219 fb.o
-                0x00000000001101dc                fb_init
-                0x000000000011021e                set_fg
-                0x0000000000110254                set_bg
-                0x000000000011028a                draw_px
-                0x00000000001102ed                draw_px_fg
-                0x000000000011032c                fill_rect
-                0x00000000001103a6                clear_screen
- .text          0x00000000001103f5        0x0 font.o
+ .text          0x000000000011008a      0x182 fbcon.o
+                0x000000000011008a                putc
+                0x00000000001101d6                puts
+ .text          0x000000000011020c      0x219 fb.o
+                0x000000000011020c                fb_init
+                0x000000000011024e                set_fg
+                0x0000000000110284                set_bg
+                0x00000000001102ba                draw_px
+                0x000000000011031d                draw_px_fg
+                0x000000000011035c                fill_rect
+                0x00000000001103d6                clear_screen
+ .text          0x0000000000110425        0x0 font.o
+ .text          0x0000000000110425       0x5b kbc.o
+                0x0000000000110425                get_kbc_data
+                0x000000000011044a                get_keycode
+                0x0000000000110469                getc
+ .text          0x0000000000110480       0x1a x86.o
+                0x0000000000110480                io_read
  *(.rodata)
- .rodata        0x00000000001103f5        0xd main.o
- *fill*         0x0000000000110402       0x1e 
- .rodata        0x0000000000110420     0x1c70 font.o
-                0x0000000000110420                font_bitmap
+ *fill*         0x000000000011049a        0x6 
+ .rodata        0x00000000001104a0     0x1c70 font.o
+                0x00000000001104a0                font_bitmap
+ *fill*         0x0000000000112110       0x10 
+ .rodata        0x0000000000112120       0x80 kbc.o
+                0x0000000000112120                keymap
  *(.data)
- .data          0x0000000000112090        0x0 main.o
- .data          0x0000000000112090        0x0 fbcon.o
- .data          0x0000000000112090        0x0 fb.o
- .data          0x0000000000112090        0x0 font.o
-                0x0000000000112090                __bss_start = .
+ .data          0x00000000001121a0        0x0 main.o
+ .data          0x00000000001121a0        0x0 fbcon.o
+ .data          0x00000000001121a0        0x0 fb.o
+ .data          0x00000000001121a0        0x0 font.o
+ .data          0x00000000001121a0        0x0 kbc.o
+ .data          0x00000000001121a0        0x0 x86.o
+                0x00000000001121a0                __bss_start = .
  *(.bss)
- .bss           0x0000000000112090        0x0 main.o
- .bss           0x0000000000112090        0x8 fbcon.o
-                0x0000000000112090                cursor_x
-                0x0000000000112094                cursor_y
- *fill*         0x0000000000112098        0x8 
- .bss           0x00000000001120a0       0x20 fb.o
-                0x00000000001120a0                fb
-                0x00000000001120b8                color_fg
-                0x00000000001120bc                color_bg
- .bss           0x00000000001120c0        0x0 font.o
-                0x00000000001120c0                __bss_end = .
+ .bss           0x00000000001121a0        0x0 main.o
+ .bss           0x00000000001121a0        0x8 fbcon.o
+                0x00000000001121a0                cursor_x
+                0x00000000001121a4                cursor_y
+ *fill*         0x00000000001121a8        0x8 
+ .bss           0x00000000001121b0       0x20 fb.o
+                0x00000000001121b0                fb
+                0x00000000001121c8                color_fg
+                0x00000000001121cc                color_bg
+ .bss           0x00000000001121d0        0x0 font.o
+ .bss           0x00000000001121d0        0x0 kbc.o
+ .bss           0x00000000001121d0        0x0 x86.o
+                0x00000000001121d0                __bss_end = .
  *(.eh_frame)
- .eh_frame      0x00000000001120c0       0x38 main.o
- .eh_frame      0x00000000001120f8       0x58 fbcon.o
- .eh_frame      0x0000000000112150       0xf8 fb.o
+ .eh_frame      0x00000000001121d0       0x38 main.o
+ .eh_frame      0x0000000000112208       0x58 fbcon.o
+ .eh_frame      0x0000000000112260       0xf8 fb.o
+ .eh_frame      0x0000000000112358       0x78 kbc.o
+ .eh_frame      0x00000000001123d0       0x38 x86.o
 LOAD main.o
 LOAD fbcon.o
 LOAD fb.o
 LOAD font.o
+LOAD kbc.o
+LOAD x86.o
 OUTPUT(kernel.bin binary)
 
-.comment        0x0000000000000000       0x4c
+.comment        0x0000000000000000       0x72
  .comment       0x0000000000000000       0x13 main.o
  .comment       0x0000000000000013       0x13 fbcon.o
  .comment       0x0000000000000026       0x13 fb.o
  .comment       0x0000000000000039       0x13 font.o
+ .comment       0x000000000000004c       0x13 kbc.o
+ .comment       0x000000000000005f       0x13 x86.o
