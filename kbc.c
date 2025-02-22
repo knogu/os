@@ -1,10 +1,15 @@
 #include <kbc.h>
 #include <x86.h>
+#include <fbcon.h>
+#include <intr.h>
+#include <pic.h>
 
 #define KBC_DATA_ADDR		0x0060
 #define KBC_DATA_BIT_IS_BRAKE	0x80
 #define KBC_STATUS_ADDR		0x0064
 #define KBC_STATUS_BIT_OBF	0x01
+#define KBC_INTR_NO		33
+
 
 const char keymap[] = {
 	0x00, ASCII_ESC, '1', '2', '3', '4', '5', '6',
@@ -42,4 +47,30 @@ unsigned char get_keycode(void) {
 char getc(void)
 {
 	return keymap[get_keycode()];
+}
+
+void do_kbc_interrupt(void) {
+	if (!(io_read(KBC_STATUS_ADDR) & KBC_STATUS_BIT_OBF)) goto kbc_exit;
+
+	unsigned char keycode = io_read(KBC_DATA_ADDR);
+	if (keycode & KBC_DATA_BIT_IS_BRAKE) goto kbc_exit;
+
+	char c = keymap[keycode];
+	if (('a' <= c) && (c <= 'z'))
+		c = c - 'a' + 'A';
+	else if (c == '\n')
+		putc('\r');
+	putc(c);
+
+kbc_exit:
+	/* PICへ割り込み処理終了を通知(EOI) */
+	set_pic_eoi(KBC_INTR_NO);
+}
+
+void kbc_init(void)
+{
+  void* handler;
+  asm volatile ("lea kbc_handler, %[handler]":[handler]"=r"(handler));
+	set_intr_desc(KBC_INTR_NO, handler);
+	enable_pic_intr(KBC_INTR_NO);
 }

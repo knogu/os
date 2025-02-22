@@ -12,78 +12,112 @@ Linker script and memory map
 
 
 .header         0x0000000000000000       0x10
-                0x0000000000000000        0x8 QUAD 0x1121a0 __bss_start
-                0x0000000000000008        0x8 QUAD 0x30 (__bss_end - __bss_start)
+                0x0000000000000000        0x8 QUAD 0x112538 __bss_start
+                0x0000000000000008        0x8 QUAD 0x1058 (__bss_end - __bss_start)
 
-.body           0x0000000000110000     0x2408 load address 0x0000000000000010
+.body           0x0000000000110000     0x3958 load address 0x0000000000000010
  *(.text)
- .text          0x0000000000110000       0x8a main.o
+ .text          0x0000000000110000       0x6d main.o
                 0x0000000000110000                start_kernel
- .text          0x000000000011008a      0x182 fbcon.o
-                0x000000000011008a                putc
-                0x00000000001101d6                puts
- .text          0x000000000011020c      0x219 fb.o
-                0x000000000011020c                fb_init
-                0x000000000011024e                set_fg
-                0x0000000000110284                set_bg
-                0x00000000001102ba                draw_px
-                0x000000000011031d                draw_px_fg
-                0x000000000011035c                fill_rect
-                0x00000000001103d6                clear_screen
- .text          0x0000000000110425        0x0 font.o
- .text          0x0000000000110425       0x5b kbc.o
-                0x0000000000110425                get_kbc_data
-                0x000000000011044a                get_keycode
-                0x0000000000110469                getc
- .text          0x0000000000110480       0x1a x86.o
-                0x0000000000110480                io_read
+ .text          0x000000000011006d      0x182 fbcon.o
+                0x000000000011006d                putc
+                0x00000000001101b9                puts
+ .text          0x00000000001101ef      0x219 fb.o
+                0x00000000001101ef                fb_init
+                0x0000000000110231                set_fg
+                0x0000000000110267                set_bg
+                0x000000000011029d                draw_px
+                0x0000000000110300                draw_px_fg
+                0x000000000011033f                fill_rect
+                0x00000000001103b9                clear_screen
+ .text          0x0000000000110408        0x0 font.o
+ .text          0x0000000000110408      0x114 kbc.o
+                0x0000000000110408                get_kbc_data
+                0x000000000011042d                get_keycode
+                0x000000000011044c                getc
+                0x0000000000110463                do_kbc_interrupt
+                0x00000000001104ea                kbc_init
+ .text          0x000000000011051c       0x97 x86.o
+                0x000000000011051c                enable_cpu_intr
+                0x0000000000110524                cpu_halt
+                0x000000000011052c                io_read
+                0x0000000000110546                io_write
+                0x0000000000110561                gdt_init
+ .text          0x00000000001105b3      0x11d intr.o
+                0x00000000001105b3                set_intr_desc
+                0x0000000000110661                intr_init
+ .text          0x00000000001106d0      0x129 pic.o
+                0x00000000001106d0                pic_init
+                0x000000000011076d                enable_pic_intr
+                0x00000000001107c9                set_pic_eoi
+ .text          0x00000000001107f9       0x17 handler.o
+                0x00000000001107f9                default_handler
+                0x00000000001107fb                kbc_handler
  *(.rodata)
- *fill*         0x000000000011049a        0x6 
- .rodata        0x00000000001104a0     0x1c70 font.o
-                0x00000000001104a0                font_bitmap
- *fill*         0x0000000000112110       0x10 
- .rodata        0x0000000000112120       0x80 kbc.o
-                0x0000000000112120                keymap
+ *fill*         0x0000000000110810       0x10 
+ .rodata        0x0000000000110820     0x1c70 font.o
+                0x0000000000110820                font_bitmap
+ *fill*         0x0000000000112490       0x10 
+ .rodata        0x00000000001124a0       0x80 kbc.o
+                0x00000000001124a0                keymap
+ .rodata        0x0000000000112520       0x18 x86.o
+                0x0000000000112520                gdt
  *(.data)
- .data          0x00000000001121a0        0x0 main.o
- .data          0x00000000001121a0        0x0 fbcon.o
- .data          0x00000000001121a0        0x0 fb.o
- .data          0x00000000001121a0        0x0 font.o
- .data          0x00000000001121a0        0x0 kbc.o
- .data          0x00000000001121a0        0x0 x86.o
-                0x00000000001121a0                __bss_start = .
+ .data          0x0000000000112538        0x0 main.o
+ .data          0x0000000000112538        0x0 fbcon.o
+ .data          0x0000000000112538        0x0 fb.o
+ .data          0x0000000000112538        0x0 font.o
+ .data          0x0000000000112538        0x0 kbc.o
+ .data          0x0000000000112538        0x0 x86.o
+ .data          0x0000000000112538        0x0 intr.o
+ .data          0x0000000000112538        0x0 pic.o
+ .data          0x0000000000112538        0x0 handler.o
+                0x0000000000112538                __bss_start = .
  *(.bss)
- .bss           0x00000000001121a0        0x0 main.o
- .bss           0x00000000001121a0        0x8 fbcon.o
-                0x00000000001121a0                cursor_x
-                0x00000000001121a4                cursor_y
- *fill*         0x00000000001121a8        0x8 
- .bss           0x00000000001121b0       0x20 fb.o
-                0x00000000001121b0                fb
-                0x00000000001121c8                color_fg
-                0x00000000001121cc                color_bg
- .bss           0x00000000001121d0        0x0 font.o
- .bss           0x00000000001121d0        0x0 kbc.o
- .bss           0x00000000001121d0        0x0 x86.o
-                0x00000000001121d0                __bss_end = .
+ .bss           0x0000000000112538        0x0 main.o
+ .bss           0x0000000000112538        0x8 fbcon.o
+                0x0000000000112538                cursor_x
+                0x000000000011253c                cursor_y
+ .bss           0x0000000000112540       0x20 fb.o
+                0x0000000000112540                fb
+                0x0000000000112558                color_fg
+                0x000000000011255c                color_bg
+ .bss           0x0000000000112560        0x0 font.o
+ .bss           0x0000000000112560        0x0 kbc.o
+ .bss           0x0000000000112560       0x10 x86.o
+                0x0000000000112560                gdtr
+ *fill*         0x0000000000112570       0x10 
+ .bss           0x0000000000112580     0x1010 intr.o
+                0x0000000000112580                idt
+                0x0000000000113580                idtr
+ .bss           0x0000000000113590        0x0 pic.o
+ .bss           0x0000000000113590        0x0 handler.o
+                0x0000000000113590                __bss_end = .
  *(.eh_frame)
- .eh_frame      0x00000000001121d0       0x38 main.o
- .eh_frame      0x0000000000112208       0x58 fbcon.o
- .eh_frame      0x0000000000112260       0xf8 fb.o
- .eh_frame      0x0000000000112358       0x78 kbc.o
- .eh_frame      0x00000000001123d0       0x38 x86.o
+ .eh_frame      0x0000000000113590       0x38 main.o
+ .eh_frame      0x00000000001135c8       0x58 fbcon.o
+ .eh_frame      0x0000000000113620       0xf8 fb.o
+ .eh_frame      0x0000000000113718       0xb8 kbc.o
+ .eh_frame      0x00000000001137d0       0xb8 x86.o
+ .eh_frame      0x0000000000113888       0x58 intr.o
+ .eh_frame      0x00000000001138e0       0x78 pic.o
 LOAD main.o
 LOAD fbcon.o
 LOAD fb.o
 LOAD font.o
 LOAD kbc.o
 LOAD x86.o
+LOAD intr.o
+LOAD pic.o
+LOAD handler.o
 OUTPUT(kernel.bin binary)
 
-.comment        0x0000000000000000       0x72
+.comment        0x0000000000000000       0x98
  .comment       0x0000000000000000       0x13 main.o
  .comment       0x0000000000000013       0x13 fbcon.o
  .comment       0x0000000000000026       0x13 fb.o
  .comment       0x0000000000000039       0x13 font.o
  .comment       0x000000000000004c       0x13 kbc.o
  .comment       0x000000000000005f       0x13 x86.o
+ .comment       0x0000000000000072       0x13 intr.o
+ .comment       0x0000000000000085       0x13 pic.o
