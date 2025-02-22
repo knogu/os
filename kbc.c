@@ -26,7 +26,7 @@ const char keymap[] = {
 };
 
 unsigned char get_kbc_data(void) {
-	while (!(io_read(KBC_DATA_ADDR) & KBC_STATUS_BIT_OBF));
+	while (!(io_read(KBC_STATUS_ADDR) & KBC_STATUS_BIT_OBF));
 
 	return io_read(KBC_DATA_ADDR);
 }
