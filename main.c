@@ -4,6 +4,7 @@
 #include <fb.h>
 #include <kbc.h>
 #include <fbcon.h>
+#include <fs.h>
 
 void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *_fb, void *_fs_start)
 {
@@ -21,11 +22,32 @@ void start_kernel(void *_t __attribute__ ((unused)), struct framebuffer *_fb, vo
 	pic_init();
 	kbc_init();
 
-	/* CPUの割り込み有効化 */
-	enable_cpu_intr();
+	/* ファイルシステムの初期化 */	/* CPUの割り込み有効化 */
+	fs_init(_fs_start);	enable_cpu_intr();
+	/* CPUの割り込み有効化 */	char *hello_str = (char *)_fs_start;
+	enable_cpu_intr();	puts(hello_str);
 
-	char *hello_str = (char *)_fs_start;
-	puts(hello_str);
+
+	/* HELLO.TXTとFOO.TXTを1行目のみ読む */
+	struct file *hello = open("HELLO.TXT");
+	if (hello) {
+		puts((char *)hello->name);
+		putc(' ');
+		puts((char *)hello->data);
+	} else {
+		puts("HELLO.TXT IS NOT FOUND.");
+	}
+	puts("\r\n");
+
+	struct file *foo = open("FOO.TXT");
+	if (foo) {
+		puts((char *)foo->name);
+		putc(' ');
+		puts((char *)foo->data);
+	} else {
+		puts("FOO.TXT IS NOT FOUND.");
+	}
+	puts("\r\n");
 
 	/* haltして待つ */
 	while (1)
