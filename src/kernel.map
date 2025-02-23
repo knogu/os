@@ -57,7 +57,7 @@ Linker script and memory map
                 0x00000000001108be                pic_init
                 0x000000000011095b                enable_pic_intr
                 0x00000000001109b7                set_pic_eoi
- .text          0x00000000001109e7      0x561 hpet.o
+ .text          0x00000000001109e7      0x56c hpet.o
                 0x00000000001109e7                hpet_init
                 0x0000000000110b00                dump_gcidr
                 0x0000000000110bf5                dump_gcr
@@ -65,26 +65,26 @@ Linker script and memory map
                 0x0000000000110cac                sleep
                 0x0000000000110d9e                do_hpet_interrupt
                 0x0000000000110e58                alert
- .text          0x0000000000110f48      0x17f acpi.o
-                0x0000000000110f48                acpi_init
-                0x0000000000110f7d                dump_sdth_sig
-                0x0000000000110fbb                dump_xsdt
-                0x0000000000111053                get_sdt
- .text          0x00000000001110c7       0x2f handler.o
-                0x00000000001110c7                default_handler
-                0x00000000001110c9                hpet_handler
-                0x00000000001110e1                kbc_handler
- .text          0x00000000001110f6       0xd7 fs.o
-                0x00000000001110f6                fs_init
-                0x000000000011110c                open
-                0x000000000011116c                get_files
- .text          0x00000000001111cd      0x189 common.o
-                0x00000000001111cd                strcmp
-                0x0000000000111262                strncmp
-                0x0000000000111307                memcpy
+ .text          0x0000000000110f53      0x17f acpi.o
+                0x0000000000110f53                acpi_init
+                0x0000000000110f88                dump_sdth_sig
+                0x0000000000110fc6                dump_xsdt
+                0x000000000011105e                get_sdt
+ .text          0x00000000001110d2       0x2f handler.o
+                0x00000000001110d2                default_handler
+                0x00000000001110d4                hpet_handler
+                0x00000000001110ec                kbc_handler
+ .text          0x0000000000111101       0xd7 fs.o
+                0x0000000000111101                fs_init
+                0x0000000000111117                open
+                0x0000000000111177                get_files
+ .text          0x00000000001111d8      0x189 common.o
+                0x00000000001111d8                strcmp
+                0x000000000011126d                strncmp
+                0x0000000000111312                memcpy
  *(.rodata)
- .rodata        0x0000000000111356        0xe main.o
- *fill*         0x0000000000111364       0x1c 
+ .rodata        0x0000000000111361        0xe main.o
+ *fill*         0x000000000011136f       0x11 
  .rodata        0x0000000000111380     0x1c70 font.o
                 0x0000000000111380                font_bitmap
  *fill*         0x0000000000112ff0       0x10 

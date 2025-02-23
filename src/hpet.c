@@ -233,24 +233,30 @@ void do_hpet_interrupt(unsigned long long current_rsp) {
 }
 
 void alert(unsigned long long us, void *handler) {
+	/* ユーザーハンドラ設定 */
+	user_handler = handler;
+
 	/* 非周期割り込みで割り込み有効化 */
-union tnccr tnccr;
-tnccr.raw = TNCCR(TIMER_N);
-tnccr.int_enb_cnf = 1;
-tnccr.type_cnf = TNCCR_TYPE_NON_PERIODIC;
-tnccr._reserved1 = 0;
-tnccr._reserved2 = 0;
-tnccr._reserved3 = 0;
-TNCCR(TIMER_N) = tnccr.raw;
-/* main counter をゼロクリア */
-MCR = (unsigned long long)0;
-/* コンパレータ設定 */
-unsigned long long femt_sec = us * US_TO_FS;
-unsigned long long clk_counts = femt_sec / counter_clk_period;
-TNCR(TIMER_N) = clk_counts;
-/* HPET 有効化 */
-union gcr gcr;
-gcr.raw = GCR;
-gcr.enable_cnf = 1;
-GCR = gcr.raw;
+	union tnccr tnccr;
+	tnccr.raw = TNCCR(TIMER_N);
+	tnccr.int_enb_cnf = 1;
+	tnccr.type_cnf = TNCCR_TYPE_NON_PERIODIC;
+	tnccr._reserved1 = 0;
+	tnccr._reserved2 = 0;
+	tnccr._reserved3 = 0;
+	TNCCR(TIMER_N) = tnccr.raw;
+
+	/* main counterをゼロクリア */
+	MCR = (unsigned long long)0;
+
+	/* コンパレータ設定 */
+	unsigned long long femt_sec = us * US_TO_FS;
+	unsigned long long clk_counts = femt_sec / counter_clk_period;
+	TNCR(TIMER_N) = clk_counts;
+
+	/* HPET有効化 */
+	union gcr gcr;
+	gcr.raw = GCR;
+	gcr.enable_cnf = 1;
+	GCR = gcr.raw;
 }
