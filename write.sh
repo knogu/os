@@ -1,4 +1,3 @@
-cp ./fs/fs.img /Volumes/OS/
 cp ./fs/kernel.bin /Volumes/OS/
 cp ./fs/poiboot.conf /Volumes/OS/
 mkdir -p /Volumes/OS/EFI/BOOT
