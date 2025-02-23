@@ -1,6 +1,8 @@
 #include <acpi.h>
 #include <fbcon.h>
 
+#define US_TO_FS 1000000000
+
 struct __attribute__((packed)) HPET_TABLE {
 	struct SDTH header;
 	unsigned int event_timer_block_id;
@@ -108,4 +110,36 @@ void dump_mcr(void)
 	puts("MCR ");
 	puth(MCR, 16);
 	puts("\r\n");
+}
+
+void sleep(unsigned long long us) {
+	/* 現在の main counter のカウント値を取得 */
+	unsigned long long mc_now = MCR;
+
+	/* us マイクロ秒後の main counter のカウント値を算出 */
+	unsigned long long fs = us * US_TO_FS;
+	union gcidr gcidr;
+	gcidr.raw = GCIDR;
+	unsigned long long mc_duration = fs / gcidr.counter_clk_period;
+	unsigned long long mc_after = mc_now + mc_duration;
+
+	/* HPET が無効であれば有効化する */
+	union gcr gcr;
+	gcr.raw = GCR;
+	unsigned char to_disable = 0;
+	if (!gcr.enable_cnf) {
+		gcr.enable_cnf = 1;
+		GCR = gcr.raw;
+
+		to_disable = 1;
+	}
+
+	while (MCR < mc_after);
+
+	/* 元々無効であった場合は無効に戻しておく */
+	if (to_disable) {
+		gcr.raw = GCR;
+		gcr.enable_cnf = 0;
+		GCR = gcr.raw;
+	}
 }
