@@ -1,5 +1,11 @@
+#include <intr.h>
+#include <pic.h>
 #include <acpi.h>
 #include <fbcon.h>
+#include <hpet.h>
+#include <common.h>
+
+#define TIMER_N 0
 
 #define US_TO_FS 1000000000
 
@@ -46,6 +52,42 @@ union gcr {
 #define MCR_ADDR	(reg_base + 0xf0)
 #define MCR	(*(volatile unsigned long long *)MCR_ADDR)
 
+/* Timer N Configuration and Capabilities Register */
+#define TNCCR_ADDR(n) (reg_base + (0x20 * (n)) + 0x100)
+#define TNCCR(n) (*(volatile unsigned long long *)(TNCCR_ADDR(n)))
+#define TNCCR_INT_TYPE_EDGE 0
+#define TNCCR_INT_TYPE_LEVEL 1
+#define TNCCR_TYPE_NON_PERIODIC 0
+#define TNCCR_TYPE_PERIODIC 1
+
+union tnccr {
+	unsigned long long raw;
+	struct __attribute__((packed)) {
+		unsigned long long _reserved1: 1;
+		unsigned long long int_type_cnf:1;
+		unsigned long long int_enb_cnf:1;
+		unsigned long long type_cnf:1;
+		unsigned long long per_int_cap:1;
+		unsigned long long size_cap:1;
+		unsigned long long val_set_cnf:1;
+		unsigned long long _reserved2:1;
+		unsigned long long mode32_cnf:1;
+		unsigned long long int_route_cnf:5;
+		unsigned long long fsb_en_cnf:1;
+		unsigned long long fsb_int_del_cap:1;
+		unsigned long long _reserved3:16;
+		unsigned long long int_route_cap:32;
+	};
+};
+
+#define TNCR_ADDR(n) (reg_base + (0x20 * (n)) + 0x108)
+#define TNCR(n) (*(volatile unsigned long long *)(TNCR_ADDR(n)))
+
+unsigned int counter_clk_period;
+
+void hpet_handler(void); 
+void (*user_handler)(unsigned long long current_rsp) = NULL;
+
 void hpet_init(void)
 {
 	/* HPET tableを取得 */
@@ -58,7 +100,32 @@ void hpet_init(void)
 	union gcr gcr;
 	gcr.raw = GCR;
 	gcr.enable_cnf = 0;
+	gcr.leg_rt_cnf = 1; 
 	GCR = gcr.raw;
+
+	/* カウント周期を取得 */
+	union gcidr gcidr;
+	gcidr.raw = GCIDR;
+	counter_clk_period = gcidr.counter_clk_period;
+
+	/* 割り込み設定初期化 */
+	union tnccr tnccr;
+	tnccr.raw = TNCCR(TIMER_N);
+	tnccr.int_type_cnf = TNCCR_INT_TYPE_EDGE;
+	tnccr.int_enb_cnf = 0;
+	tnccr.type_cnf = TNCCR_TYPE_NON_PERIODIC;
+	tnccr.val_set_cnf = 0;
+	tnccr.mode32_cnf = 0;
+	tnccr.fsb_en_cnf = 0;
+	tnccr._reserved1 = 0;
+	tnccr._reserved2 = 0;
+	tnccr._reserved3 = 0;
+	TNCCR(TIMER_N) = tnccr.raw;	
+
+	/* IDT へ HPET 割り込みのハンドラ登録 */
+	set_intr_desc(HPET_INTR_NO, hpet_handler);
+	/* PIC の割り込みマスク解除 */
+enable_pic_intr(HPET_INTR_NO);
 }
 
 void dump_gcidr(void)
@@ -142,4 +209,48 @@ void sleep(unsigned long long us) {
 		gcr.enable_cnf = 0;
 		GCR = gcr.raw;
 	}
+}
+
+void do_hpet_interrupt(unsigned long long current_rsp) {
+	/* HPET 無効化 */
+	union gcr gcr;
+	gcr.raw = GCR;
+	gcr.enable_cnf = 0;
+	GCR = gcr.raw;
+
+	/* 割り込みを無効化 */
+	union tnccr tnccr;
+	tnccr.raw = TNCCR(TIMER_N);
+	tnccr.int_enb_cnf = 0;
+	tnccr._reserved1 = 0;
+	tnccr._reserved2 = 0;
+	tnccr._reserved3 = 0;
+	TNCCR(TIMER_N) = tnccr.raw;
+
+	if (user_handler) user_handler(current_rsp);
+
+	set_pic_eoi(HPET_INTR_NO);
+}
+
+void alert(unsigned long long us, void *handler) {
+	/* 非周期割り込みで割り込み有効化 */
+union tnccr tnccr;
+tnccr.raw = TNCCR(TIMER_N);
+tnccr.int_enb_cnf = 1;
+tnccr.type_cnf = TNCCR_TYPE_NON_PERIODIC;
+tnccr._reserved1 = 0;
+tnccr._reserved2 = 0;
+tnccr._reserved3 = 0;
+TNCCR(TIMER_N) = tnccr.raw;
+/* main counter をゼロクリア */
+MCR = (unsigned long long)0;
+/* コンパレータ設定 */
+unsigned long long femt_sec = us * US_TO_FS;
+unsigned long long clk_counts = femt_sec / counter_clk_period;
+TNCR(TIMER_N) = clk_counts;
+/* HPET 有効化 */
+union gcr gcr;
+gcr.raw = GCR;
+gcr.enable_cnf = 1;
+GCR = gcr.raw;
 }
