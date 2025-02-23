@@ -1,4 +1,4 @@
-TARGET = kernel.bin
+TARGET = fs/kernel.bin
 CFLAGS = -Wall -Wextra -nostdinc -nostdlib -fno-builtin -fno-common -Iinclude
 LDFLAGS = -Map kernel.map -s -x -T kernel.ld
 
