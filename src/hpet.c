@@ -275,7 +275,10 @@ void alert(unsigned long long us, void *handler) {
 }
 
 void ptimer_setup(unsigned long long us, void *handler) {
-	/* HPET 無効化 */ union gcr gcr; gcr.raw = GCR; gcr.enable_cnf = 0; GCR = gcr.raw;
+	/* HPET 無効化 */ union gcr gcr;
+	gcr.raw = GCR;
+	gcr.enable_cnf = 0;
+	GCR = gcr.raw;
 	/* ユーザーハンドラ設定 */ user_handler = handler;
 	/* 周期割り込みで割り込み有効化 */
 	union tnccr tnccr;
@@ -283,7 +286,8 @@ void ptimer_setup(unsigned long long us, void *handler) {
 	tnccr.type_cnf = TNCCR_TYPE_PERIODIC; tnccr._reserved1 = 0; tnccr._reserved2 = 0; tnccr._reserved3 = 0;
 	TNCCR(TIMER_N) = tnccr.raw;
 	/* コンパレータ設定値を計算しておく */
-	unsigned long long femt_sec = us * US_TO_FS; cmpr_clk_counts = femt_sec / counter_clk_period;
+	unsigned long long femt_sec = us * US_TO_FS;
+	cmpr_clk_counts = femt_sec / counter_clk_period;
 }
 
 void ptimer_start(void)
