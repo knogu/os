@@ -84,6 +84,8 @@ union tnccr {
 #define TNCR(n) (*(volatile unsigned long long *)(TNCR_ADDR(n)))
 
 unsigned int counter_clk_period;
+unsigned long long cmpr_clk_counts;
+unsigned char is_oneshot = 0;
 
 void hpet_handler(void); 
 void (*user_handler)(unsigned long long current_rsp) = NULL;
@@ -212,23 +214,31 @@ void sleep(unsigned long long us) {
 }
 
 void do_hpet_interrupt(unsigned long long current_rsp) {
-	/* HPET 無効化 */
-	union gcr gcr;
-	gcr.raw = GCR;
-	gcr.enable_cnf = 0;
-	GCR = gcr.raw;
+	if (is_oneshot == 1) {
+		/* HPET無効化 */
+		union gcr gcr;
+		gcr.raw = GCR;
+		gcr.enable_cnf = 0;
+		GCR = gcr.raw;
 
-	/* 割り込みを無効化 */
-	union tnccr tnccr;
-	tnccr.raw = TNCCR(TIMER_N);
-	tnccr.int_enb_cnf = 0;
-	tnccr._reserved1 = 0;
-	tnccr._reserved2 = 0;
-	tnccr._reserved3 = 0;
-	TNCCR(TIMER_N) = tnccr.raw;
+		/* 割り込みを無効化 */
+		union tnccr tnccr;
+		tnccr.raw = TNCCR(TIMER_N);
+		tnccr.int_enb_cnf = 0;
+		tnccr._reserved1 = 0;
+		tnccr._reserved2 = 0;
+		tnccr._reserved3 = 0;
+		TNCCR(TIMER_N) = tnccr.raw;
 
-	if (user_handler) user_handler(current_rsp);
+		/* ワンショットタイマー設定を解除 */
+		is_oneshot = 0;
+	}
 
+	/* ユーザーハンドラを呼び出す */
+	if (user_handler)
+		user_handler(current_rsp);
+
+	/* PICへ割り込み処理終了を通知(EOI) */
 	set_pic_eoi(HPET_INTR_NO);
 }
 
@@ -254,9 +264,61 @@ void alert(unsigned long long us, void *handler) {
 	unsigned long long clk_counts = femt_sec / counter_clk_period;
 	TNCR(TIMER_N) = clk_counts;
 
+	/* ワンショットタイマー設定 */
+	is_oneshot = 1;
+
 	/* HPET有効化 */
 	union gcr gcr;
 	gcr.raw = GCR;
 	gcr.enable_cnf = 1;
 	GCR = gcr.raw;
+}
+
+void ptimer_setup(unsigned long long us, void *handler) {
+	/* HPET 無効化 */ union gcr gcr; gcr.raw = GCR; gcr.enable_cnf = 0; GCR = gcr.raw;
+	/* ユーザーハンドラ設定 */ user_handler = handler;
+	/* 周期割り込みで割り込み有効化 */
+	union tnccr tnccr;
+	tnccr.raw = TNCCR(TIMER_N); tnccr.int_enb_cnf = 1;
+	tnccr.type_cnf = TNCCR_TYPE_PERIODIC; tnccr._reserved1 = 0; tnccr._reserved2 = 0; tnccr._reserved3 = 0;
+	TNCCR(TIMER_N) = tnccr.raw;
+	/* コンパレータ設定値を計算しておく */
+	unsigned long long femt_sec = us * US_TO_FS; cmpr_clk_counts = femt_sec / counter_clk_period;
+}
+
+void ptimer_start(void)
+{
+	/* コンパレータ初期化 */
+	union tnccr tnccr;
+	tnccr.raw = TNCCR(TIMER_N);
+	tnccr.val_set_cnf = 1;
+	TNCCR(TIMER_N) = tnccr.raw;
+	TNCR(TIMER_N) = cmpr_clk_counts;
+
+	/* main counter 初期化 */
+	MCR = (unsigned long long)0;
+
+	/* HPET 有効化 */
+	union gcr gcr;
+	gcr.raw = GCR;
+	gcr.enable_cnf = 1;
+	GCR = gcr.raw;
+}
+
+void ptimer_stop(void)
+{
+	/* HPET無効化 */
+	union gcr gcr;
+	gcr.raw = GCR;
+	gcr.enable_cnf = 0;
+	GCR = gcr.raw;
+
+	/* 割り込みを無効化 */
+	union tnccr tnccr;
+	tnccr.raw = TNCCR(TIMER_N);
+	tnccr.int_enb_cnf = 0;
+	tnccr._reserved1 = 0;
+	tnccr._reserved2 = 0;
+	tnccr._reserved3 = 0;
+	TNCCR(TIMER_N) = tnccr.raw;
 }

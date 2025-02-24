@@ -40,11 +40,14 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	/* ファイルシステムの初期化 */
 	fs_init(_fs_start);
 
-	puts("WAIT...");
-	alert(5 * SEC_TO_US, handler);
+	/* 1秒周期の周期タイマー設定 */
+	ptimer_setup(1 * SEC_TO_US, handler);
 
 	/* CPUの割り込み有効化 */
 	enable_cpu_intr();
+
+	/* 周期タイマースタート */
+	ptimer_start();
 
 	/* haltして待つ */
 	while (1)
@@ -53,5 +56,9 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 
 void handler(void)
 {
-puts(" DONE");
+	static unsigned char counter = 0;
+	if (counter < 10)
+		putc('0' + counter++);
+	else
+		ptimer_stop();
 }
