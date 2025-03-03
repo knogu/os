@@ -1,0 +1,30 @@
+
+There are no discarded input sections
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+
+.body           0x0000000000000000       0x68
+ *(.text)
+ .text          0x0000000000000000       0x2c app.o
+                0x0000000000000000                main
+ *(.rodata)
+ *(.data)
+ .data          0x000000000000002c        0x0 app.o
+                0x000000000000002c                __bss_start = .
+ *(.bss)
+ .bss           0x000000000000002c        0x0 app.o
+                0x000000000000002c                __bss_end = .
+ *(.eh_frame)
+ *fill*         0x000000000000002c        0x4 
+ .eh_frame      0x0000000000000030       0x38 app.o
+LOAD app.o
+OUTPUT(test binary)
+
+.comment        0x0000000000000000       0x13
+ .comment       0x0000000000000000       0x13 app.o
