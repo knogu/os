@@ -15,7 +15,7 @@ struct __attribute__((packed)) platform_info {
 	void *rsdp;
 };
 
-void handler(void);
+void do_taskA(void);
 
 void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 		  void *_fs_start)
@@ -50,16 +50,18 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	/* スケジューラの開始 */
 	sched_start();
 
+	do_taskA();
+
 	/* haltして待つ */
 	while (1)
 		cpu_halt();
 }
 
-void handler(void)
+void do_taskA(void)
 {
-	static unsigned char counter = 0;
-	if (counter < 10)
-		putc('0' + counter++);
-	else
-		ptimer_stop();
+	while (1) {
+		putc('A');
+		volatile unsigned long long wait = 10000000;
+		while (wait--);
+	}
 }

@@ -12,164 +12,169 @@ Linker script and memory map
 
 
 .header         0x0000000000000000       0x10
-                0x0000000000000000        0x8 QUAD 0x11339c __bss_start
-                0x0000000000000008        0x8 QUAD 0x13d4 (__bss_end - __bss_start)
+                0x0000000000000000        0x8 QUAD 0x11349c __bss_start
+                0x0000000000000008        0x8 QUAD 0x2404 (__bss_end - __bss_start)
 
-.body           0x0000000000110000     0x4f68 load address 0x0000000000000010
+.body           0x0000000000110000     0x60b0 load address 0x0000000000000010
  *(.text)
- .text          0x0000000000110000       0xce main.o
+ .text          0x0000000000110000       0xcb main.o
                 0x0000000000110000                start_kernel
-                0x0000000000110098                handler
- .text          0x00000000001100ce       0xf3 iv.o
-                0x00000000001100ce                view
-                0x0000000000110110                iv_init
-                0x0000000000110137                iv_kbc_handler
- .text          0x00000000001101c1      0x29a fbcon.o
-                0x00000000001101c1                putc
-                0x000000000011030d                puts
-                0x0000000000110343                putd
-                0x00000000001103df                puth
- .text          0x000000000011045b      0x219 fb.o
-                0x000000000011045b                fb_init
-                0x000000000011049d                set_fg
-                0x00000000001104d3                set_bg
-                0x0000000000110509                draw_px
-                0x000000000011056c                draw_px_fg
-                0x00000000001105ab                fill_rect
-                0x0000000000110625                clear_screen
- .text          0x0000000000110674        0x0 font.o
- .text          0x0000000000110674       0xba kbc.o
-                0x0000000000110674                get_kbc_data
-                0x0000000000110699                get_keycode
-                0x00000000001106b8                getc
-                0x00000000001106cf                do_kbc_interrupt
-                0x000000000011070e                kbc_init
- .text          0x000000000011072e       0x97 x86.o
-                0x000000000011072e                enable_cpu_intr
-                0x0000000000110736                cpu_halt
-                0x000000000011073e                io_read
-                0x0000000000110758                io_write
-                0x0000000000110773                gdt_init
- .text          0x00000000001107c5      0x10f intr.o
-                0x00000000001107c5                set_intr_desc
-                0x0000000000110873                intr_init
- .text          0x00000000001108d4      0x129 pic.o
-                0x00000000001108d4                pic_init
-                0x0000000000110971                enable_pic_intr
-                0x00000000001109cd                set_pic_eoi
- .text          0x00000000001109fd      0x783 hpet.o
-                0x00000000001109fd                hpet_init
-                0x0000000000110b16                dump_gcidr
-                0x0000000000110c0b                dump_gcr
-                0x0000000000110c8a                dump_mcr
-                0x0000000000110cc2                sleep
-                0x0000000000110db4                do_hpet_interrupt
-                0x0000000000110e84                alert
-                0x0000000000110f86                ptimer_setup
-                0x0000000000111059                ptimer_start
-                0x00000000001110f4                ptimer_stop
- .text          0x0000000000111180      0x17f acpi.o
-                0x0000000000111180                acpi_init
-                0x00000000001111b5                dump_sdth_sig
-                0x00000000001111f3                dump_xsdt
-                0x000000000011128b                get_sdt
- .text          0x00000000001112ff       0x2f handler.o
-                0x00000000001112ff                default_handler
-                0x0000000000111301                hpet_handler
-                0x0000000000111319                kbc_handler
- .text          0x000000000011132e       0xd7 fs.o
-                0x000000000011132e                fs_init
-                0x0000000000111344                open
-                0x00000000001113a4                get_files
- .text          0x0000000000111405      0x189 common.o
-                0x0000000000111405                strcmp
-                0x000000000011149a                strncmp
-                0x000000000011153f                memcpy
- .text          0x000000000011158e       0x3d sched.o
-                0x000000000011158e                schedule
-                0x00000000001115a9                sched_init
-                0x00000000001115bf                sched_start
+                0x000000000011009d                do_taskA
+ .text          0x00000000001100cb       0xf3 iv.o
+                0x00000000001100cb                view
+                0x000000000011010d                iv_init
+                0x0000000000110134                iv_kbc_handler
+ .text          0x00000000001101be      0x29a fbcon.o
+                0x00000000001101be                putc
+                0x000000000011030a                puts
+                0x0000000000110340                putd
+                0x00000000001103dc                puth
+ .text          0x0000000000110458      0x219 fb.o
+                0x0000000000110458                fb_init
+                0x000000000011049a                set_fg
+                0x00000000001104d0                set_bg
+                0x0000000000110506                draw_px
+                0x0000000000110569                draw_px_fg
+                0x00000000001105a8                fill_rect
+                0x0000000000110622                clear_screen
+ .text          0x0000000000110671        0x0 font.o
+ .text          0x0000000000110671       0xba kbc.o
+                0x0000000000110671                get_kbc_data
+                0x0000000000110696                get_keycode
+                0x00000000001106b5                getc
+                0x00000000001106cc                do_kbc_interrupt
+                0x000000000011070b                kbc_init
+ .text          0x000000000011072b       0x97 x86.o
+                0x000000000011072b                enable_cpu_intr
+                0x0000000000110733                cpu_halt
+                0x000000000011073b                io_read
+                0x0000000000110755                io_write
+                0x0000000000110770                gdt_init
+ .text          0x00000000001107c2      0x10f intr.o
+                0x00000000001107c2                set_intr_desc
+                0x0000000000110870                intr_init
+ .text          0x00000000001108d1      0x129 pic.o
+                0x00000000001108d1                pic_init
+                0x000000000011096e                enable_pic_intr
+                0x00000000001109ca                set_pic_eoi
+ .text          0x00000000001109fa      0x783 hpet.o
+                0x00000000001109fa                hpet_init
+                0x0000000000110b13                dump_gcidr
+                0x0000000000110c08                dump_gcr
+                0x0000000000110c87                dump_mcr
+                0x0000000000110cbf                sleep
+                0x0000000000110db1                do_hpet_interrupt
+                0x0000000000110e81                alert
+                0x0000000000110f83                ptimer_setup
+                0x0000000000111056                ptimer_start
+                0x00000000001110f1                ptimer_stop
+ .text          0x000000000011117d      0x17f acpi.o
+                0x000000000011117d                acpi_init
+                0x00000000001111b2                dump_sdth_sig
+                0x00000000001111f0                dump_xsdt
+                0x0000000000111288                get_sdt
+ .text          0x00000000001112fc       0x2f handler.o
+                0x00000000001112fc                default_handler
+                0x00000000001112fe                hpet_handler
+                0x0000000000111316                kbc_handler
+ .text          0x000000000011132b       0xd7 fs.o
+                0x000000000011132b                fs_init
+                0x0000000000111341                open
+                0x00000000001113a1                get_files
+ .text          0x0000000000111402      0x189 common.o
+                0x0000000000111402                strcmp
+                0x0000000000111497                strncmp
+                0x000000000011153c                memcpy
+ .text          0x000000000011158b      0x141 sched.o
+                0x000000000011158b                do_taskB
+                0x00000000001115b9                schedule
+                0x0000000000111614                sched_init
+                0x00000000001116c0                sched_start
  *(.rodata)
- *fill*         0x00000000001115cb       0x15 
- .rodata        0x00000000001115e0     0x1c70 font.o
-                0x00000000001115e0                font_bitmap
- *fill*         0x0000000000113250       0x10 
- .rodata        0x0000000000113260       0x80 kbc.o
-                0x0000000000113260                keymap
- .rodata        0x00000000001132e0       0x18 x86.o
-                0x00000000001132e0                gdt
- .rodata        0x00000000001132f8       0x97 hpet.o
- .rodata        0x000000000011338f        0xd acpi.o
+ *fill*         0x00000000001116cc       0x14 
+ .rodata        0x00000000001116e0     0x1c70 font.o
+                0x00000000001116e0                font_bitmap
+ *fill*         0x0000000000113350       0x10 
+ .rodata        0x0000000000113360       0x80 kbc.o
+                0x0000000000113360                keymap
+ .rodata        0x00000000001133e0       0x18 x86.o
+                0x00000000001133e0                gdt
+ .rodata        0x00000000001133f8       0x97 hpet.o
+ .rodata        0x000000000011348f        0xd acpi.o
  *(.data)
- .data          0x000000000011339c        0x0 main.o
- .data          0x000000000011339c        0x0 iv.o
- .data          0x000000000011339c        0x0 fbcon.o
- .data          0x000000000011339c        0x0 fb.o
- .data          0x000000000011339c        0x0 font.o
- .data          0x000000000011339c        0x0 kbc.o
- .data          0x000000000011339c        0x0 x86.o
- .data          0x000000000011339c        0x0 intr.o
- .data          0x000000000011339c        0x0 pic.o
- .data          0x000000000011339c        0x0 hpet.o
- .data          0x000000000011339c        0x0 acpi.o
- .data          0x000000000011339c        0x0 handler.o
- .data          0x000000000011339c        0x0 fs.o
- .data          0x000000000011339c        0x0 common.o
- .data          0x000000000011339c        0x0 sched.o
-                0x000000000011339c                __bss_start = .
+ .data          0x000000000011349c        0x0 main.o
+ .data          0x000000000011349c        0x0 iv.o
+ .data          0x000000000011349c        0x0 fbcon.o
+ .data          0x000000000011349c        0x0 fb.o
+ .data          0x000000000011349c        0x0 font.o
+ .data          0x000000000011349c        0x0 kbc.o
+ .data          0x000000000011349c        0x0 x86.o
+ .data          0x000000000011349c        0x0 intr.o
+ .data          0x000000000011349c        0x0 pic.o
+ .data          0x000000000011349c        0x0 hpet.o
+ .data          0x000000000011349c        0x0 acpi.o
+ .data          0x000000000011349c        0x0 handler.o
+ .data          0x000000000011349c        0x0 fs.o
+ .data          0x000000000011349c        0x0 common.o
+ .data          0x000000000011349c        0x0 sched.o
+                0x000000000011349c                __bss_start = .
  *(.bss)
- .bss           0x000000000011339c        0x1 main.o
- *fill*         0x000000000011339d        0x3 
- .bss           0x00000000001133a0      0x330 iv.o
-                0x00000000001133a0                iv_files
-                0x00000000001136c0                iv_num_files
-                0x00000000001136c8                iv_idx
- .bss           0x00000000001136d0        0x8 fbcon.o
-                0x00000000001136d0                cursor_x
-                0x00000000001136d4                cursor_y
- *fill*         0x00000000001136d8        0x8 
- .bss           0x00000000001136e0       0x20 fb.o
-                0x00000000001136e0                fb
-                0x00000000001136f8                color_fg
-                0x00000000001136fc                color_bg
- .bss           0x0000000000113700        0x0 font.o
- .bss           0x0000000000113700        0x0 kbc.o
- .bss           0x0000000000113700       0x10 x86.o
-                0x0000000000113700                gdtr
- *fill*         0x0000000000113710       0x10 
- .bss           0x0000000000113720     0x1010 intr.o
-                0x0000000000113720                idt
-                0x0000000000114720                idtr
- .bss           0x0000000000114730        0x0 pic.o
- .bss           0x0000000000114730       0x28 hpet.o
-                0x0000000000114730                reg_base
-                0x0000000000114738                counter_clk_period
-                0x0000000000114740                cmpr_clk_counts
-                0x0000000000114748                is_oneshot
-                0x0000000000114750                user_handler
- .bss           0x0000000000114758       0x10 acpi.o
-                0x0000000000114758                xsdt
-                0x0000000000114760                num_sdts
- .bss           0x0000000000114768        0x0 handler.o
- .bss           0x0000000000114768        0x8 fs.o
-                0x0000000000114768                fs_start
- .bss           0x0000000000114770        0x0 common.o
- .bss           0x0000000000114770        0x0 sched.o
-                0x0000000000114770                __bss_end = .
+ .bss           0x000000000011349c        0x0 main.o
+ *fill*         0x000000000011349c        0x4 
+ .bss           0x00000000001134a0      0x330 iv.o
+                0x00000000001134a0                iv_files
+                0x00000000001137c0                iv_num_files
+                0x00000000001137c8                iv_idx
+ .bss           0x00000000001137d0        0x8 fbcon.o
+                0x00000000001137d0                cursor_x
+                0x00000000001137d4                cursor_y
+ *fill*         0x00000000001137d8        0x8 
+ .bss           0x00000000001137e0       0x20 fb.o
+                0x00000000001137e0                fb
+                0x00000000001137f8                color_fg
+                0x00000000001137fc                color_bg
+ .bss           0x0000000000113800        0x0 font.o
+ .bss           0x0000000000113800        0x0 kbc.o
+ .bss           0x0000000000113800       0x10 x86.o
+                0x0000000000113800                gdtr
+ *fill*         0x0000000000113810       0x10 
+ .bss           0x0000000000113820     0x1010 intr.o
+                0x0000000000113820                idt
+                0x0000000000114820                idtr
+ .bss           0x0000000000114830        0x0 pic.o
+ .bss           0x0000000000114830       0x28 hpet.o
+                0x0000000000114830                reg_base
+                0x0000000000114838                counter_clk_period
+                0x0000000000114840                cmpr_clk_counts
+                0x0000000000114848                is_oneshot
+                0x0000000000114850                user_handler
+ .bss           0x0000000000114858       0x10 acpi.o
+                0x0000000000114858                xsdt
+                0x0000000000114860                num_sdts
+ .bss           0x0000000000114868        0x0 handler.o
+ .bss           0x0000000000114868        0x8 fs.o
+                0x0000000000114868                fs_start
+ .bss           0x0000000000114870        0x0 common.o
+ *fill*         0x0000000000114870       0x10 
+ .bss           0x0000000000114880     0x1020 sched.o
+                0x0000000000114880                task_sp
+                0x0000000000114890                current_task
+                0x00000000001148a0                taskB_stack
+                0x00000000001158a0                __bss_end = .
  *(.eh_frame)
- .eh_frame      0x0000000000114770       0x58 main.o
- .eh_frame      0x00000000001147c8       0x78 iv.o
- .eh_frame      0x0000000000114840       0x98 fbcon.o
- .eh_frame      0x00000000001148d8       0xf8 fb.o
- .eh_frame      0x00000000001149d0       0xb8 kbc.o
- .eh_frame      0x0000000000114a88       0xb8 x86.o
- .eh_frame      0x0000000000114b40       0x58 intr.o
- .eh_frame      0x0000000000114b98       0x78 pic.o
- .eh_frame      0x0000000000114c10      0x158 hpet.o
- .eh_frame      0x0000000000114d68       0x98 acpi.o
- .eh_frame      0x0000000000114e00       0x78 fs.o
- .eh_frame      0x0000000000114e78       0x78 common.o
- .eh_frame      0x0000000000114ef0       0x78 sched.o
+ .eh_frame      0x00000000001158a0       0x50 main.o
+ .eh_frame      0x00000000001158f0       0x78 iv.o
+ .eh_frame      0x0000000000115968       0x98 fbcon.o
+ .eh_frame      0x0000000000115a00       0xf8 fb.o
+ .eh_frame      0x0000000000115af8       0xb8 kbc.o
+ .eh_frame      0x0000000000115bb0       0xb8 x86.o
+ .eh_frame      0x0000000000115c68       0x58 intr.o
+ .eh_frame      0x0000000000115cc0       0x78 pic.o
+ .eh_frame      0x0000000000115d38      0x158 hpet.o
+ .eh_frame      0x0000000000115e90       0x98 acpi.o
+ .eh_frame      0x0000000000115f28       0x78 fs.o
+ .eh_frame      0x0000000000115fa0       0x78 common.o
+ .eh_frame      0x0000000000116018       0x98 sched.o
 LOAD main.o
 LOAD iv.o
 LOAD fbcon.o
