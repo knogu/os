@@ -9,6 +9,7 @@
 #include <hpet.h>
 #include <common.h>
 #include <sched.h>
+#include <syscall.h>
 
 struct __attribute__((packed)) platform_info {
 	struct framebuffer fb;
@@ -37,6 +38,21 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	pic_init();
 	hpet_init();
 	kbc_init();
+
+	syscall_init();	
+
+	unsigned long long softirq_ret;
+	asm volatile ("movq $1, %%rdi\n"
+		      "movq $2, %%rsi\n"
+		      "movq $3, %%rdx\n"
+		      "movq $4, %%rcx\n"
+		      "int $0x80\n"
+		      "movq %%rax, %[softirq_ret]"
+		      : [softirq_ret]"=r"(softirq_ret):);
+	puth(softirq_ret, 16);
+
+	while (1)
+		cpu_halt();
 
 	/* ファイルシステムの初期化 */
 	fs_init(_fs_start);
