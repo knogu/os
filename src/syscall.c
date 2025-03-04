@@ -1,11 +1,15 @@
 #include <intr.h>
 #include <pic.h>
 #include <fbcon.h>
+#include <fs.h>
+#include <proc.h>
 
 #define SYSCALL_INTR_NO	0x80
 
 enum SYSCALL_NO {
     SYSCALL_PUTC,
+    SYSCALL_OPEN,
+    SYSCALL_EXEC,
     MAX_SYSCALL_NUM
 };
 
@@ -17,8 +21,13 @@ unsigned long long do_syscall_interrupt(
     switch (syscall_id)
     {
         case SYSCALL_PUTC:
-            /* code */
             putc((char)arg1);
+            break;
+        case SYSCALL_OPEN:
+            ret_val = (unsigned long long)open((char *)arg1);
+            break;
+        case SYSCALL_EXEC:
+            exec((struct file *)arg1);
             break;
         default:
             break;
