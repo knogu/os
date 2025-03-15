@@ -49,7 +49,9 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	fs_init(_fs_start);
 
 	mem_init(pi->mem, pi->mem_desc_num, pi->mem_desc_unit_size);
-	void* p = alloc_pages(1);
+	char* p = alloc_pages(1);
+	p = "TESTTEST";
+	puts(p);
 
 	exec(open("test"));
 

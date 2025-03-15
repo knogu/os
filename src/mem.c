@@ -15,9 +15,9 @@ void mem_init(void* ptr, unsigned long long mem_desc_num, unsigned long long mem
 		if (p->Type == EfiConventionalMemory) {
             physical_start = p->PhysicalStart;
             puts("\r\n");
-            puts("physical start: ");
+            puts("PHYSICAL START: ");
             puth(p->PhysicalStart, 16);
-            puts("\r\nnumberOfPages: ");
+            puts("\r\nNUMBER OF PAGES: ");
             puth(p->NumberOfPages, 16);
             page_cnt = p->NumberOfPages;
             break;
