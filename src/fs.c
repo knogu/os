@@ -45,6 +45,7 @@ void add_file(struct file newfile) {
 	struct file *f = fs_start;
 	unsigned int num;
 
+	puts(newfile.data);
 	for (num = 0; f->name[0] != END_OF_FS; num++) {
 		f = (struct file *)((unsigned long long)f + sizeof(struct file)
 				    + f->size);
