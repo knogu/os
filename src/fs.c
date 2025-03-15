@@ -49,6 +49,7 @@ void add_file(struct file newfile) {
 		f = (struct file *)((unsigned long long)f + sizeof(struct file)
 				    + f->size);
 	}
+	puts(newfile.data);
 	*f = newfile;
 	f = f + sizeof(struct file) + newfile.size;
 	memcpy(f->name, END_OF_FS, 1);
