@@ -39,7 +39,7 @@ unsigned long long get_files(struct file *files[])
 	return num;
 }
 
-void add_file(struct file file) {
+void add_file(struct file newfile) {
 	struct file *f = fs_start;
 	unsigned int num;
 
@@ -47,5 +47,7 @@ void add_file(struct file file) {
 		f = (struct file *)((unsigned long long)f + sizeof(struct file)
 				    + f->size);
 	}
-	*f = file;
+	*f = newfile;
+	f = f + sizeof(struct file) + newfile.size;
+	memcpy(f->name, END_OF_FS, 1);
 }
