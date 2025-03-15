@@ -86,25 +86,25 @@ Linker script and memory map
                 0x00000000001115aa                hpet_handler
                 0x00000000001115c2                kbc_handler
                 0x00000000001115d7                syscall_handler
- .text          0x00000000001115ec      0x187 fs.o
+ .text          0x00000000001115ec      0x193 fs.o
                 0x00000000001115ec                fs_init
                 0x0000000000111602                open
                 0x0000000000111682                get_files
                 0x00000000001116e3                add_file
- .text          0x0000000000111773      0x189 common.o
-                0x0000000000111773                strcmp
-                0x0000000000111808                strncmp
-                0x00000000001118ad                memcpy
- .text          0x00000000001118fc       0x1d proc.o
-                0x00000000001118fc                exec
- .text          0x0000000000111919      0x202 mem.o
-                0x0000000000111919                mem_init
-                0x00000000001119df                alloc_pages
-                0x0000000000111a3f                dump_memmap
-                0x0000000000111ab8                get_allocatable_area
+ .text          0x000000000011177f      0x189 common.o
+                0x000000000011177f                strcmp
+                0x0000000000111814                strncmp
+                0x00000000001118b9                memcpy
+ .text          0x0000000000111908       0x1d proc.o
+                0x0000000000111908                exec
+ .text          0x0000000000111925      0x202 mem.o
+                0x0000000000111925                mem_init
+                0x00000000001119eb                alloc_pages
+                0x0000000000111a4b                dump_memmap
+                0x0000000000111ac4                get_allocatable_area
  *(.rodata)
- .rodata        0x0000000000111b1b       0x26 main.o
- *fill*         0x0000000000111b41       0x1f 
+ .rodata        0x0000000000111b27       0x26 main.o
+ *fill*         0x0000000000111b4d       0x13 
  .rodata        0x0000000000111b60     0x1c70 font.o
                 0x0000000000111b60                font_bitmap
  *fill*         0x00000000001137d0       0x10 
