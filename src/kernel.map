@@ -12,8 +12,8 @@ Linker script and memory map
 
 
 .header         0x0000000000000000       0x10
-                0x0000000000000000        0x8 QUAD 0x1137c2 __bss_start
-                0x0000000000000008        0x8 QUAD 0x2436 (__bss_end - __bss_start)
+                0x0000000000000000        0x8 QUAD 0x1137c8 __bss_start
+                0x0000000000000008        0x8 QUAD 0x2430 (__bss_end - __bss_start)
 
 .body           0x0000000000110000     0x6530 load address 0x0000000000000010
  *(.text)
@@ -96,14 +96,14 @@ Linker script and memory map
                 0x0000000000111765                memcpy
  .text          0x00000000001117b4       0x1d proc.o
                 0x00000000001117b4                exec
- .text          0x00000000001117d1      0x1f6 mem.o
+ .text          0x00000000001117d1      0x207 mem.o
                 0x00000000001117d1                mem_init
-                0x000000000011188b                alloc_pages
-                0x00000000001118eb                dump_memmap
-                0x0000000000111964                get_allocatable_area
+                0x000000000011189c                alloc_pages
+                0x00000000001118fc                dump_memmap
+                0x0000000000111975                get_allocatable_area
  *(.rodata)
- .rodata        0x00000000001119c7        0x5 main.o
- *fill*         0x00000000001119cc       0x14 
+ .rodata        0x00000000001119d8        0x5 main.o
+ *fill*         0x00000000001119dd        0x3 
  .rodata        0x00000000001119e0     0x1c70 font.o
                 0x00000000001119e0                font_bitmap
  *fill*         0x0000000000113650       0x10 
@@ -113,31 +113,31 @@ Linker script and memory map
                 0x00000000001136e0                gdt
  .rodata        0x00000000001136f8       0x97 hpet.o
  .rodata        0x000000000011378f        0xd acpi.o
- .rodata        0x000000000011379c       0x26 mem.o
+ .rodata        0x000000000011379c       0x2c mem.o
  *(.data)
- .data          0x00000000001137c2        0x0 main.o
- .data          0x00000000001137c2        0x0 syscall.o
- .data          0x00000000001137c2        0x0 iv.o
- .data          0x00000000001137c2        0x0 fbcon.o
- .data          0x00000000001137c2        0x0 fb.o
- .data          0x00000000001137c2        0x0 font.o
- .data          0x00000000001137c2        0x0 kbc.o
- .data          0x00000000001137c2        0x0 x86.o
- .data          0x00000000001137c2        0x0 intr.o
- .data          0x00000000001137c2        0x0 pic.o
- .data          0x00000000001137c2        0x0 sched.o
- .data          0x00000000001137c2        0x0 hpet.o
- .data          0x00000000001137c2        0x0 acpi.o
- .data          0x00000000001137c2        0x0 handler.o
- .data          0x00000000001137c2        0x0 fs.o
- .data          0x00000000001137c2        0x0 common.o
- .data          0x00000000001137c2        0x0 proc.o
- .data          0x00000000001137c2        0x0 mem.o
-                0x00000000001137c2                __bss_start = .
+ .data          0x00000000001137c8        0x0 main.o
+ .data          0x00000000001137c8        0x0 syscall.o
+ .data          0x00000000001137c8        0x0 iv.o
+ .data          0x00000000001137c8        0x0 fbcon.o
+ .data          0x00000000001137c8        0x0 fb.o
+ .data          0x00000000001137c8        0x0 font.o
+ .data          0x00000000001137c8        0x0 kbc.o
+ .data          0x00000000001137c8        0x0 x86.o
+ .data          0x00000000001137c8        0x0 intr.o
+ .data          0x00000000001137c8        0x0 pic.o
+ .data          0x00000000001137c8        0x0 sched.o
+ .data          0x00000000001137c8        0x0 hpet.o
+ .data          0x00000000001137c8        0x0 acpi.o
+ .data          0x00000000001137c8        0x0 handler.o
+ .data          0x00000000001137c8        0x0 fs.o
+ .data          0x00000000001137c8        0x0 common.o
+ .data          0x00000000001137c8        0x0 proc.o
+ .data          0x00000000001137c8        0x0 mem.o
+                0x00000000001137c8                __bss_start = .
  *(.bss)
- .bss           0x00000000001137c2        0x0 main.o
- .bss           0x00000000001137c2        0x0 syscall.o
- *fill*         0x00000000001137c2       0x1e 
+ .bss           0x00000000001137c8        0x0 main.o
+ .bss           0x00000000001137c8        0x0 syscall.o
+ *fill*         0x00000000001137c8       0x18 
  .bss           0x00000000001137e0      0x330 iv.o
                 0x00000000001137e0                iv_files
                 0x0000000000113b00                iv_num_files

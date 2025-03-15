@@ -23,6 +23,8 @@ void mem_init(void* ptr, unsigned long long mem_desc_num, unsigned long long mem
             break;
 		}
     }
+    p = (struct EFI_MEMORY_DESCRIPTOR *)(
+        (unsigned char *)p + mem_desc_unit_size);
 }
 
 void* alloc_pages(long long n) {
