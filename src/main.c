@@ -48,11 +48,11 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	
 	fs_init(_fs_start);
 	struct file newfile;
-	memcpy(newfile.name, "new\0", 4);
-	memcpy(newfile.data, "TESTTEST\0", 9);
+	memcpy(newfile.name, "NEW\0", 4);
+	memcpy(newfile.data, "THISISNEWFILE\0", 9);
 	newfile.size = 8;
 	add_file(newfile);
-	struct file* ptr = open("new");
+	struct file* ptr = open("NEW");
 	puts(ptr->data);
 
 	mem_init(pi->mem, pi->mem_desc_num, pi->mem_desc_unit_size);
