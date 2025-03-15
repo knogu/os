@@ -52,7 +52,7 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	memcpy(newfile.data, "THISISNEWFILE\0", 14);
 	puts(newfile.data);
 	newfile.size = 14;
-	add_file(newfile);
+	add_file(&newfile);
 	struct file* ptr = open("NEW");
 	puts((char *)ptr->data);
 
