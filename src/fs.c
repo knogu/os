@@ -41,17 +41,19 @@ unsigned long long get_files(struct file *files[])
 	return num;
 }
 
-void add_file(struct file newfile) {
+void add_file(struct file* newfile) {
 	struct file *f = fs_start;
 	unsigned int num;
 
-	puts(newfile.data);
 	for (num = 0; f->name[0] != END_OF_FS; num++) {
 		f = (struct file *)((unsigned long long)f + sizeof(struct file)
 				    + f->size);
 	}
-	puts(newfile.data);
-	*f = newfile;
-	f = f + sizeof(struct file) + newfile.size;
+	puts(newfile->data);
+	*f = *newfile;
+	f->size = newfile->size;
+	memcpy(f->name, newfile->name, 28);
+	memcpy(f->data, newfile->data, newfile->size);
+	f = f + sizeof(struct file) + newfile->size;
 	memcpy(f->name, END_OF_FS, 1);
 }
