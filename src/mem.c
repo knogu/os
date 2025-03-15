@@ -10,6 +10,7 @@ long long physical_start = 0;
 void mem_init(void* ptr, unsigned long long mem_desc_num, unsigned long long mem_desc_unit_size) {
     struct EFI_MEMORY_DESCRIPTOR *p = (struct EFI_MEMORY_DESCRIPTOR *)ptr;
 	unsigned int i;
+    puth(mem_desc_num, 16);
     for (i = 0; i < mem_desc_num; i++) {
 		if (p->Type == EfiConventionalMemory) {
             physical_start = p->PhysicalStart;
