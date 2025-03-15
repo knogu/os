@@ -6,7 +6,7 @@
 struct __attribute__((packed)) file {
 	char name[FILE_NAME_LEN];
 	unsigned int size;
-	unsigned char data[0];
+	unsigned char* data;
 };
 
 void fs_init(void *_fs_start);
