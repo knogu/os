@@ -49,8 +49,9 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	fs_init(_fs_start);
 	struct file newfile;
 	memcpy(newfile.name, "NEW\0", 4);
-	memcpy(newfile.data, "THISISNEWFILE\0", 15);
-	newfile.size = 15;
+	memcpy(newfile.data, "THISISNEWFILE\0", 14);
+	puts(newfile.data);
+	newfile.size = 14;
 	add_file(newfile);
 	struct file* ptr = open("NEW");
 	puts((char *)ptr->data);
