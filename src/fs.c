@@ -15,9 +15,11 @@ struct file *open(char *name)
 {
 	struct file *f = fs_start;
 	while (f->name[0] != END_OF_FS) {
-		if (!strcmp(f->name, name))
+		if (!strcmp(f->name, name)) {
+			puts("FOUND\r\n");
+			putd(f->size, 10);
 			return f;
-
+		}
 		f = (struct file *)((unsigned long long)f + sizeof(struct file)
 				    + f->size);
 	}
