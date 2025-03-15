@@ -1,4 +1,5 @@
 #include <fs.h>
+#include <fbcon.h>
 #include <common.h>
 
 #define END_OF_FS	0x00
@@ -14,6 +15,9 @@ struct file *open(char *name)
 {
 	struct file *f = fs_start;
 	while (f->name[0] != END_OF_FS) {
+		puts("\r\n");
+		puts(f->name);
+		puts("\r\n");
 		if (!strcmp(f->name, name))
 			return f;
 
