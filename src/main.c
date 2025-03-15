@@ -11,6 +11,7 @@
 #include <sched.h>
 #include <syscall.h>
 #include <proc.h>
+#include <mem.h>
 
 struct __attribute__((packed)) platform_info {
 	struct framebuffer fb;
