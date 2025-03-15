@@ -12,5 +12,6 @@ struct __attribute__((packed)) file {
 void fs_init(void *_fs_start);
 struct file *open(char *name);
 unsigned long long get_files(struct file *files[]);
+void add_file(struct file file);
 
 #endif

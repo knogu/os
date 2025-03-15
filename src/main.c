@@ -47,6 +47,13 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	syscall_init();	
 	
 	fs_init(_fs_start);
+	struct file newfile;
+	memcpy(newfile.name, "new", 3);
+	memcpy(newfile.data, "TESTTEST\0", 9);
+	newfile.size = 8;
+	add_file(newfile);
+	struct file* ptr = open("new");
+	puts(ptr->data);
 
 	mem_init(pi->mem, pi->mem_desc_num, pi->mem_desc_unit_size);
 	char* p = alloc_pages(1);

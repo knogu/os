@@ -37,3 +37,14 @@ unsigned long long get_files(struct file *files[])
 
 	return num;
 }
+
+void add_file(struct file file) {
+	struct file *f = fs_start;
+	unsigned int num;
+
+	for (num = 0; f->name[0] != END_OF_FS; num++) {
+		f = (struct file *)((unsigned long long)f + sizeof(struct file)
+				    + f->size);
+	}
+	*f = file;
+}
