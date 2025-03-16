@@ -12,6 +12,8 @@
 #include <syscall.h>
 #include <proc.h>
 #include <mem.h>
+#include <pci.h>
+#include <nic.h>
 
 struct __attribute__((packed)) platform_info {
 	struct framebuffer fb;
@@ -44,17 +46,21 @@ void start_kernel(void *_t __attribute__((unused)), struct platform_info *pi,
 	hpet_init();
 	kbc_init();
 
+	dump_vid_did(NIC_BUS_NUM, NIC_DEV_NUM, NIC_FUNC_NUM);
+	while (1)
+		cpu_halt();
+
 	syscall_init();	
 	
 	fs_init(_fs_start);
-	struct file newfile;
-	memcpy(newfile.name, "NEW\0", 4);
-	memcpy(newfile.data, "THISISNEWFILE\0", 14);
-	puts(newfile.data);
-	newfile.size = 14;
-	add_file(&newfile);
-	struct file* ptr = open("NEW");
-	puts((char *)ptr->data);
+	// struct file newfile;
+	// memcpy(newfile.name, "NEW\0", 4);
+	// memcpy(newfile.data, "THISISNEWFILE\0", 14);
+	// puts(newfile.data);
+	// newfile.size = 14;
+	// add_file(&newfile);
+	// struct file* ptr = open("NEW");
+	// puts((char *)ptr->data);
 
 	mem_init(pi->mem, pi->mem_desc_num, pi->mem_desc_unit_size);
 	char* p = alloc_pages(1);
